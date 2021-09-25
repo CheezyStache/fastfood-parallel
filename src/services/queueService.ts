@@ -41,10 +41,48 @@ export function onEvent(
     currentState.currentId === undefined &&
     currentState.queueIds.length === 0
   ) {
+    const newCurrentState = setNewCurrentId(state, id, index);
+    setGlobalState(process, newCurrentState);
+
     runAfterProcessEnded(process, () => onProccessEnd(process, onEnd, index));
 
     return;
   }
+
+  const newQueueState = setNewQueue(state, id, index);
+
+  setGlobalState(process, newQueueState);
+}
+
+function setNewCurrentId(
+  state: PointProps | PointProps[],
+  id: number,
+  index: number = 0
+): PointProps | PointProps[] {
+  const isArray = Array.isArray(state);
+
+  let newState: PointProps | PointProps[];
+  if (isArray) {
+    state[index] = {
+      ...state[index],
+      currentId: id,
+    };
+    newState = state;
+  } else
+    newState = {
+      ...state,
+      currentId: id,
+    };
+
+  return newState;
+}
+
+function setNewQueue(
+  state: PointProps | PointProps[],
+  id: number,
+  index: number = 0
+): PointProps | PointProps[] {
+  const isArray = Array.isArray(state);
 
   let newState: PointProps | PointProps[];
   if (isArray) {
@@ -59,7 +97,7 @@ export function onEvent(
       queueIds: [...state.queueIds, id],
     };
 
-  setGlobalState(process, newState);
+  return newState;
 }
 
 function onProccessEnd(
@@ -87,5 +125,8 @@ function onProccessEnd(
   setGlobalState(process, newState);
 
   callback(id);
-  if (newQueue.length > 0) onProccessEnd(process, callback, index);
+  if (newQueue.length > 0)
+    runAfterProcessEnded(process, () =>
+      onProccessEnd(process, callback, index)
+    );
 }

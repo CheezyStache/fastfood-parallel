@@ -22,18 +22,18 @@ const initialState: GlobalStateModel = {
   },
   nextCustomerId: 0,
   timeSettings: {
-    enter: 2,
+    enter: 10,
     checkout: 10,
-    orderList: 5,
-    cookBurger: 15,
-    cookFries: 12,
+    orderList: 10,
+    cookBurger: 10,
+    cookFries: 10,
     cookDrinks: 10,
-    packing: 15,
+    packing: 10,
     delivery: 10,
-    exit: 2,
+    exit: 10,
 
-    enterExitRange: 4,
-    workRange: 15,
+    enterExitRange: 1,
+    workRange: 1,
   },
 };
 

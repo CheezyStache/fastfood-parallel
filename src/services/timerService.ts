@@ -5,7 +5,7 @@ import { RandomUtils } from "../utils/randomUtils";
 export function runAfterProcessEnded(process: Process, callback: () => void) {
   const time = generateProcessTime(process);
 
-  setTimeout(callback, time * 1000);
+  setTimeout(() => callback(), time * 1000);
 }
 
 type Process = keyof Omit<TimeSettings, "enterExitRange" | "workRange">;
