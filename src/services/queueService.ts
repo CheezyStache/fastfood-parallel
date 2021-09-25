@@ -1,9 +1,30 @@
 import { getGlobalState, setGlobalState } from "../globalState/initGlobalState";
 import { GlobalStateModel } from "../models/globalState";
 import { PointProps } from "../models/pointProps";
+import { RandomUtils } from "../utils/randomUtils";
 import { runAfterProcessEnded } from "./timerService";
 
-type Process = keyof Omit<GlobalStateModel, "nextCustomerId" | "timeSettings">;
+type Process = keyof Omit<
+  GlobalStateModel,
+  "packQueue" | "nextCustomerId" | "timeSettings"
+>;
+type ArrayProcess = keyof Pick<GlobalStateModel, "checkout" | "delivery">;
+
+export function findSmallestQueueIndex(process: ArrayProcess): number {
+  const state = getGlobalState(process);
+
+  const minLength = state.sort(
+    (a, b) => a.queueIds.length - b.queueIds.length
+  )[0].queueIds.length;
+
+  const freeQueues = state
+    .map((s, index) => ({ s, index }))
+    .filter((s) => s.s.queueIds.length === minLength);
+  if (freeQueues.length === 1) return freeQueues[0].index;
+
+  return freeQueues[RandomUtils.randomIntFromInterval(0, freeQueues.length - 1)]
+    .index;
+}
 
 export function onEvent(
   id: number,

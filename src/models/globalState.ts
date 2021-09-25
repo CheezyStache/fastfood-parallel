@@ -11,8 +11,16 @@ export interface GlobalStateModel {
   delivery: PointProps[];
   exit: PointProps;
 
+  packQueue: PackQueue;
+
   nextCustomerId: number;
   timeSettings: TimeSettings;
+}
+
+export interface PackQueue {
+  burgers: number[];
+  fries: number[];
+  drinks: number[];
 }
 
 export interface TimeSettings {

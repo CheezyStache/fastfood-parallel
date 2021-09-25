@@ -15,6 +15,11 @@ const initialState: GlobalStateModel = {
   delivery: [{ ...emptyPoint }, { ...emptyPoint }],
   exit: { ...emptyPoint },
 
+  packQueue: {
+    burgers: [],
+    fries: [],
+    drinks: [],
+  },
   nextCustomerId: 0,
   timeSettings: {
     enter: 2,
