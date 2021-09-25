@@ -1,19 +1,22 @@
 import { createGlobalState } from "react-hooks-global-state";
 import { GlobalStateModel } from "../models/globalState";
-import { PointProps } from "../models/pointProps";
-
-const emptyPoint: PointProps = { currentId: undefined, queueIds: [] };
 
 const initialState: GlobalStateModel = {
-  enter: { ...emptyPoint },
-  checkout: [{ ...emptyPoint }, { ...emptyPoint }],
-  orderList: { ...emptyPoint },
-  cookBurger: { ...emptyPoint },
-  cookFries: { ...emptyPoint },
-  cookDrinks: { ...emptyPoint },
-  packing: { ...emptyPoint },
-  delivery: [{ ...emptyPoint }, { ...emptyPoint }],
-  exit: { ...emptyPoint },
+  enter: [{ currentId: undefined, queueIds: [] }],
+  checkout: [
+    { currentId: undefined, queueIds: [] },
+    { currentId: undefined, queueIds: [] },
+  ],
+  orderList: [{ currentId: undefined, queueIds: [] }],
+  cookBurger: [{ currentId: undefined, queueIds: [] }],
+  cookFries: [{ currentId: undefined, queueIds: [] }],
+  cookDrinks: [{ currentId: undefined, queueIds: [] }],
+  packing: [{ currentId: undefined, queueIds: [] }],
+  delivery: [
+    { currentId: undefined, queueIds: [] },
+    { currentId: undefined, queueIds: [] },
+  ],
+  exit: [{ currentId: undefined, queueIds: [] }],
 
   packQueue: {
     burgers: [],
@@ -22,7 +25,7 @@ const initialState: GlobalStateModel = {
   },
   nextCustomerId: 0,
   timeSettings: {
-    enter: 10,
+    enter: 5,
     checkout: 10,
     orderList: 10,
     cookBurger: 10,

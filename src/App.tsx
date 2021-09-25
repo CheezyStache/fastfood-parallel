@@ -10,17 +10,15 @@ import { addCustomer } from "./services/enterService";
 function App() {
   return (
     <div>
-      <Button onClick={() => addCustomer()} />
+      <Button onClick={addCustomer} />
       <Point name="Enter" process="enter" />
-      <Point name="Checkout 1" process="checkout" index={0} />
-      <Point name="Checkout 2" process="checkout" index={1} />
+      <Point name="Checkout" process="checkout" />
       <Point name="Order list" process="orderList" />
       <Point name="Burgers" process="cookBurger" />
       <Point name="Fries" process="cookFries" />
       <Point name="Drinks" process="cookDrinks" />
       <Point name="Packing" process="packing" />
-      <Point name="Delivery 1" process="delivery" index={0} />
-      <Point name="Delivery 2" process="delivery" index={1} />
+      <Point name="Delivery" process="delivery" />
       <Point name="Exit" process="exit" />
     </div>
   );

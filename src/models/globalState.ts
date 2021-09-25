@@ -1,15 +1,15 @@
 import { PointProps } from "./pointProps";
 
 export interface GlobalStateModel {
-  enter: PointProps;
+  enter: PointProps[];
   checkout: PointProps[];
-  orderList: PointProps;
-  cookBurger: PointProps;
-  cookFries: PointProps;
-  cookDrinks: PointProps;
-  packing: PointProps;
+  orderList: PointProps[];
+  cookBurger: PointProps[];
+  cookFries: PointProps[];
+  cookDrinks: PointProps[];
+  packing: PointProps[];
   delivery: PointProps[];
-  exit: PointProps;
+  exit: PointProps[];
 
   packQueue: PackQueue;
 

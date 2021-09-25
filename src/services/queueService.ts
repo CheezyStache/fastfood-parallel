@@ -8,11 +8,38 @@ type Process = keyof Omit<
   GlobalStateModel,
   "packQueue" | "nextCustomerId" | "timeSettings"
 >;
-type ArrayProcess = keyof Pick<GlobalStateModel, "checkout" | "delivery">;
 
-export function findSmallestQueueIndex(process: ArrayProcess): number {
+export function onEvent(
+  id: number,
+  process: Process,
+  onEnd: (id: number) => void
+): void {
   const state = getGlobalState(process);
+  const index = findSmallestQueueIndex(state);
 
+  console.log(index);
+  if (
+    state[index].currentId === undefined &&
+    state[index].queueIds.length === 0
+  ) {
+    changeState(process, state, index, id);
+
+    runAfterProcessEnded(process, () => onProccessEnd(process, onEnd, index));
+
+    return;
+  }
+
+  changeState(
+    process,
+    state,
+    index,
+    state[index].currentId as number,
+    undefined,
+    id
+  );
+}
+
+function findSmallestQueueIndex(state: PointProps[]): number {
   const minLength = state.sort(
     (a, b) => a.queueIds.length - b.queueIds.length
   )[0].queueIds.length;
@@ -26,106 +53,46 @@ export function findSmallestQueueIndex(process: ArrayProcess): number {
     .index;
 }
 
-export function onEvent(
-  id: number,
+function changeState(
   process: Process,
-  onEnd: (id: number) => void,
-  index: number = 0
+  state: PointProps[],
+  index: number,
+  currentId: number,
+  queueIds?: number[],
+  addQueueId?: number
 ): void {
-  const state = getGlobalState(process);
-  const isArray = Array.isArray(state);
+  const newState = [...state];
 
-  const currentState = isArray ? state[index] : state;
+  if (queueIds === undefined) queueIds = newState[index].queueIds;
 
-  if (
-    currentState.currentId === undefined &&
-    currentState.queueIds.length === 0
-  ) {
-    const newCurrentState = setNewCurrentId(state, id, index);
-    setGlobalState(process, newCurrentState);
+  if (addQueueId !== undefined) queueIds.push(addQueueId);
 
-    runAfterProcessEnded(process, () => onProccessEnd(process, onEnd, index));
+  newState[index] = {
+    ...newState[index],
+    currentId: currentId,
+    queueIds: queueIds,
+  };
+  if (process === "checkout") console.log(newState);
 
-    return;
-  }
-
-  const newQueueState = setNewQueue(state, id, index);
-
-  setGlobalState(process, newQueueState);
-}
-
-function setNewCurrentId(
-  state: PointProps | PointProps[],
-  id: number,
-  index: number = 0
-): PointProps | PointProps[] {
-  const isArray = Array.isArray(state);
-
-  let newState: PointProps | PointProps[];
-  if (isArray) {
-    state[index] = {
-      ...state[index],
-      currentId: id,
-    };
-    newState = state;
-  } else
-    newState = {
-      ...state,
-      currentId: id,
-    };
-
-  return newState;
-}
-
-function setNewQueue(
-  state: PointProps | PointProps[],
-  id: number,
-  index: number = 0
-): PointProps | PointProps[] {
-  const isArray = Array.isArray(state);
-
-  let newState: PointProps | PointProps[];
-  if (isArray) {
-    state[index] = {
-      ...state[index],
-      queueIds: [...state[index].queueIds, id],
-    };
-    newState = state;
-  } else
-    newState = {
-      ...state,
-      queueIds: [...state.queueIds, id],
-    };
-
-  return newState;
+  setGlobalState(process, newState);
 }
 
 function onProccessEnd(
   process: Process,
   callback: (id: number) => void,
-  index: number = 0
+  index: number
 ): void {
   const state = getGlobalState(process);
-  const isArray = Array.isArray(state);
+  const id = state[index].currentId;
+  if (id === undefined) throw Error("Id was lost during process execution");
 
-  const currentState = isArray ? state[index] : state;
-  const id = currentState.currentId;
+  const firstId = state[index].queueIds[0];
+  const newQueue = state[index].queueIds.slice(1);
 
-  if (id === undefined) return;
-
-  const firstId = currentState.queueIds[0];
-  const newQueue = currentState.queueIds.slice(1);
-
-  let newState: PointProps | PointProps[];
-  if (isArray) {
-    state[index] = { currentId: firstId, queueIds: newQueue };
-    newState = state;
-  } else newState = { currentId: firstId, queueIds: newQueue };
-
-  setGlobalState(process, newState);
+  changeState(process, state, index, firstId, newQueue);
 
   callback(id);
-  if (newQueue.length > 0)
+  if (newQueue.length > 0 || firstId !== undefined)
     runAfterProcessEnded(process, () =>
       onProccessEnd(process, callback, index)
     );
