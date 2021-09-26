@@ -6,6 +6,7 @@ import "../node_modules/@blueprintjs/core/lib/css/blueprint.css";
 import { Point } from "./components/point";
 import { Button } from "@blueprintjs/core";
 import { addCustomer } from "./services/enterService";
+import { PackPoint } from "./components/packPoint";
 
 function App() {
   return (
@@ -17,7 +18,7 @@ function App() {
       <Point name="Burgers" process="cookBurger" />
       <Point name="Fries" process="cookFries" />
       <Point name="Drinks" process="cookDrinks" />
-      <Point name="Packing" process="packing" />
+      <PackPoint name="Packing" />
       <Point name="Delivery" process="delivery" />
       <Point name="Exit" process="exit" />
     </div>

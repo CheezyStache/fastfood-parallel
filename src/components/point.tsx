@@ -24,7 +24,7 @@ export const Point: FunctionComponent<PointComponentProps> = ({
     <>
       {state.map((s, index) => (
         <Card key={name + "_" + index}>
-          <div className={Classes.TEXT_LARGE}>{name}</div>
+          <div className={Classes.TEXT_LARGE}>{name + " " + (index + 1)}</div>
           <PointStatus state={s} />
         </Card>
       ))}

@@ -72,7 +72,6 @@ function changeState(
     currentId: currentId,
     queueIds: queueIds,
   };
-  if (process === "checkout") console.log(newState);
 
   setGlobalState(process, newState);
 }

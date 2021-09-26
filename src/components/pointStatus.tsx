@@ -8,18 +8,38 @@ interface PointStatusProps {
 
 export const PointStatus: FunctionComponent<PointStatusProps> = ({ state }) => {
   return (
-    <Card>
-      <Icon
-        icon={state.currentId === undefined ? "ban-circle" : "endorsed"}
-        size={30}
-        intent={state.currentId === undefined ? Intent.DANGER : Intent.SUCCESS}
-      />
-      <Icon
-        icon={state.queueIds.length === 0 ? "square" : "array"}
-        size={30}
-        intent={state.queueIds.length === 0 ? Intent.DANGER : Intent.SUCCESS}
-      />
-      <div className={Classes.LARGE}>{state.queueIds.length}</div>
+    <Card className="point-status">
+      <div className="status-column">
+        <Icon
+          icon={state.currentId === undefined ? "ban-circle" : "endorsed"}
+          size={30}
+          intent={
+            state.currentId === undefined ? Intent.DANGER : Intent.SUCCESS
+          }
+          className="work-status"
+        />
+        {state.queueIds.length === 0 && (
+          <Icon icon="circle" size={30} intent={Intent.DANGER} />
+        )}
+        {state.queueIds
+          .filter((s, index) => index < 3)
+          .map((s, index) => (
+            <Icon
+              icon={index === 2 ? "array" : "user"}
+              size={30}
+              intent={Intent.SUCCESS}
+            />
+          ))}
+      </div>
+      <div className="text-column">
+        <div className={Classes.TEXT_LARGE + " work-status work-status-margin"}>
+          {state.currentId === undefined ? "No Work" : "In Work"}
+        </div>
+        <div className={Classes.TEXT_LARGE + " work-status"}>
+          In Queue:
+          {"\n" + state.queueIds.length}
+        </div>
+      </div>
     </Card>
   );
 };
