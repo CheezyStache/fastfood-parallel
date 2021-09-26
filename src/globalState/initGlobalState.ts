@@ -2,21 +2,21 @@ import { createGlobalState } from "react-hooks-global-state";
 import { GlobalStateModel } from "../models/globalState";
 
 const initialState: GlobalStateModel = {
-  enter: [{ currentId: undefined, queueIds: [] }],
+  enter: [{ currentId: undefined, queueIds: [], timer: -1 }],
   checkout: [
-    { currentId: undefined, queueIds: [] },
-    { currentId: undefined, queueIds: [] },
+    { currentId: undefined, queueIds: [], timer: -1 },
+    { currentId: undefined, queueIds: [], timer: -1 },
   ],
-  orderList: [{ currentId: undefined, queueIds: [] }],
-  cookBurger: [{ currentId: undefined, queueIds: [] }],
-  cookFries: [{ currentId: undefined, queueIds: [] }],
-  cookDrinks: [{ currentId: undefined, queueIds: [] }],
-  packing: [{ currentId: undefined, queueIds: [] }],
+  orderList: [{ currentId: undefined, queueIds: [], timer: -1 }],
+  cookBurger: [{ currentId: undefined, queueIds: [], timer: -1 }],
+  cookFries: [{ currentId: undefined, queueIds: [], timer: -1 }],
+  cookDrinks: [{ currentId: undefined, queueIds: [], timer: -1 }],
+  packing: [{ currentId: undefined, queueIds: [], timer: -1 }],
   delivery: [
-    { currentId: undefined, queueIds: [] },
-    { currentId: undefined, queueIds: [] },
+    { currentId: undefined, queueIds: [], timer: -1 },
+    { currentId: undefined, queueIds: [], timer: -1 },
   ],
-  exit: [{ currentId: undefined, queueIds: [] }],
+  exit: [{ currentId: undefined, queueIds: [], timer: -1 }],
 
   packQueue: {
     burgers: [],

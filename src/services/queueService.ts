@@ -2,7 +2,7 @@ import { getGlobalState, setGlobalState } from "../globalState/initGlobalState";
 import { GlobalStateModel } from "../models/globalState";
 import { PointProps } from "../models/pointProps";
 import { RandomUtils } from "../utils/randomUtils";
-import { runAfterProcessEnded } from "./timerService";
+import { runAfterProcessEnded, generateProcessTime } from "./timerService";
 
 type Process = keyof Omit<
   GlobalStateModel,
@@ -17,14 +17,15 @@ export function onEvent(
   const state = getGlobalState(process);
   const index = findSmallestQueueIndex(state);
 
-  console.log(index);
   if (
     state[index].currentId === undefined &&
     state[index].queueIds.length === 0
   ) {
     changeState(process, state, index, id);
 
-    runAfterProcessEnded(process, () => onProccessEnd(process, onEnd, index));
+    setupProcessTimer(process, index, () =>
+      onProccessEnd(process, onEnd, index)
+    );
 
     return;
   }
@@ -83,16 +84,30 @@ function onProccessEnd(
 ): void {
   const state = getGlobalState(process);
   const id = state[index].currentId;
-  if (id === undefined) throw Error("Id was lost during process execution");
+  if (id === undefined) console.error("Id is undefined", process, index);
 
   const firstId = state[index].queueIds[0];
   const newQueue = state[index].queueIds.slice(1);
 
   changeState(process, state, index, firstId, newQueue);
 
-  callback(id);
+  callback(id ?? 0);
   if (newQueue.length > 0 || firstId !== undefined)
-    runAfterProcessEnded(process, () =>
+    setupProcessTimer(process, index, () =>
       onProccessEnd(process, callback, index)
     );
+}
+
+function setupProcessTimer(
+  process: Process,
+  index: number,
+  callback: () => void
+) {
+  const time = generateProcessTime(process);
+  setGlobalState(process, (oldState) => {
+    oldState[index] = { ...oldState[index], timer: time };
+    return oldState;
+  });
+
+  runAfterProcessEnded(time, callback);
 }

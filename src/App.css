@@ -32,3 +32,41 @@
 .point-status .text-column .work-status-margin {
   margin-bottom: 15px;
 }
+
+.timer {
+  position: relative;
+  height: 40px;
+  width: 40px;
+  text-align: center;
+}
+
+.timer-number {
+  display: inline-block;
+  line-height: 40px;
+}
+
+.timer-svg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  transform: rotateY(-180deg) rotateZ(-90deg);
+}
+
+.timer-svg circle {
+  stroke-dasharray: 113px;
+  stroke-dashoffset: 0px;
+  stroke-linecap: round;
+  stroke-width: 2px;
+  fill: none;
+}
+
+@keyframes countdown {
+  from {
+    stroke-dashoffset: 0px;
+  }
+  to {
+    stroke-dashoffset: 113px;
+  }
+}

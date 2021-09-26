@@ -1,6 +1,7 @@
 import { Card, Classes, Icon, Intent } from "@blueprintjs/core";
 import React, { FunctionComponent } from "react";
 import { PointProps } from "../models/pointProps";
+import { Timer } from "./timer";
 
 interface PointStatusProps {
   state: PointProps;
@@ -28,6 +29,7 @@ export const PointStatus: FunctionComponent<PointStatusProps> = ({ state }) => {
               icon={index === 2 ? "array" : "user"}
               size={30}
               intent={Intent.SUCCESS}
+              key={state.toString() + "Queue" + index}
             />
           ))}
       </div>
@@ -35,10 +37,11 @@ export const PointStatus: FunctionComponent<PointStatusProps> = ({ state }) => {
         <div className={Classes.TEXT_LARGE + " work-status work-status-margin"}>
           {state.currentId === undefined ? "No Work" : "In Work"}
         </div>
-        <div className={Classes.TEXT_LARGE + " work-status"}>
+        <div className={Classes.TEXT_LARGE + " work-status work-status-margin"}>
           In Queue:
           {"\n" + state.queueIds.length}
         </div>
+        <Timer state={state} />
       </div>
     </Card>
   );

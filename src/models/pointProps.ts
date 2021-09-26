@@ -1,5 +1,5 @@
 export interface PointProps {
-    currentId: number | undefined;
-    queueIds: number[];
+  currentId: number | undefined;
+  queueIds: number[];
+  timer: number;
 }
-

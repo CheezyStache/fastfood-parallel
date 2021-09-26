@@ -2,15 +2,17 @@ import { getGlobalState } from "../globalState/initGlobalState";
 import { TimeSettings } from "../models/globalState";
 import { RandomUtils } from "../utils/randomUtils";
 
-export function runAfterProcessEnded(process: Process, callback: () => void) {
-  const time = generateProcessTime(process);
-
+export function runAfterProcessEnded(
+  time: number,
+  callback: () => void
+): number {
   setTimeout(() => callback(), time * 1000);
+  return time;
 }
 
 type Process = keyof Omit<TimeSettings, "enterExitRange" | "workRange">;
 
-function generateProcessTime(process: Process): number {
+export function generateProcessTime(process: Process): number {
   const settings = getGlobalState("timeSettings");
   const time = settings[process];
 
