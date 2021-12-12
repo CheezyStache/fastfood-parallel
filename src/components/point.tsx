@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { useGlobalState } from "../globalState/initGlobalState";
+import { getGlobalState, useGlobalState } from "../globalState/initGlobalState";
 import { GlobalStateModel } from "../models/globalState";
 import { PointStatus } from "./pointStatus";
 
@@ -14,11 +14,13 @@ type Process = keyof Omit<GlobalStateModel, "currentId" | "timeSettings">;
 interface PointComponentProps {
   name: string;
   process: Process;
+  nextProcess: Process[];
 }
 
 export const Point: FunctionComponent<PointComponentProps> = ({
   name,
   process,
+  nextProcess,
 }) => {
   const [state] = useGlobalState(process);
   const [queue, setQueue] = useState<string[]>([]);
@@ -33,8 +35,15 @@ export const Point: FunctionComponent<PointComponentProps> = ({
   }, []);
 
   const onNextId = useCallback(() => {
+    if (queue.length === 0) throw new Error("Can't find queue item");
+
+    nextProcess.forEach((p) => {
+      const next = getGlobalState(p);
+      next.next({ id: queue[0] });
+    });
+
     setQueue((old) => old.filter((q, index) => index !== 0));
-  }, [setQueue]);
+  }, [setQueue, nextProcess, queue]);
 
   return (
     <Card key={name}>
