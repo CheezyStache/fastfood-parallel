@@ -17,15 +17,15 @@ const initialState: GlobalStateModel = {
   currentId: 0,
 
   timeSettings: {
-    enter: 5,
+    enter: 3,
     checkout: 10,
-    orderList: 10,
+    orderList: 8,
     cookBurger: 10,
-    cookFries: 10,
-    cookDrinks: 10,
-    packing: 10,
+    cookFries: 8,
+    cookDrinks: 6,
+    packing: 8,
     delivery: 10,
-    exit: 10,
+    exit: 4,
   },
 };
 
