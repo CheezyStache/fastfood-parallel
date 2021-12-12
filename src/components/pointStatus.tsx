@@ -3,16 +3,23 @@ import React, { FunctionComponent } from "react";
 import { TimeSettings } from "../models/globalState";
 import { Timer } from "./timer";
 
+export interface WaitQueueItem {
+  id: string;
+  count: number;
+}
+
 interface PointStatusProps {
   queue: string[];
   processName: keyof TimeSettings;
   onNextId: () => void;
+  waitQueue?: WaitQueueItem[];
 }
 
 export const PointStatus: FunctionComponent<PointStatusProps> = ({
   queue,
   processName,
   onNextId,
+  waitQueue,
 }) => {
   return (
     <Card className="point-status">
@@ -51,6 +58,9 @@ export const PointStatus: FunctionComponent<PointStatusProps> = ({
           onTimeEnd={onNextId}
         />
       </div>
+      {waitQueue !== undefined && (
+        <div>Waiting for ingredients: {waitQueue.length}</div>
+      )}
     </Card>
   );
 };

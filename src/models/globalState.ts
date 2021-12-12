@@ -16,12 +16,6 @@ export interface GlobalStateModel {
   timeSettings: TimeSettings;
 }
 
-export interface PackQueue {
-  burgers: number[];
-  fries: number[];
-  drinks: number[];
-}
-
 export interface TimeSettings {
   enter: number;
   checkout: number;
@@ -32,7 +26,4 @@ export interface TimeSettings {
   packing: number;
   delivery: number;
   exit: number;
-
-  enterExitRange: number;
-  workRange: number;
 }

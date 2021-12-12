@@ -26,9 +26,6 @@ const initialState: GlobalStateModel = {
     packing: 10,
     delivery: 10,
     exit: 10,
-
-    enterExitRange: 1,
-    workRange: 1,
   },
 };
 
