@@ -1,47 +1,55 @@
 import { Card, Classes, Icon, Intent } from "@blueprintjs/core";
 import React, { FunctionComponent } from "react";
-import { PointProps } from "../models/pointProps";
+import { TimeSettings } from "../models/globalState";
 import { Timer } from "./timer";
 
 interface PointStatusProps {
-  state: PointProps;
+  queue: string[];
+  processName: keyof TimeSettings;
+  onNextId: () => void;
 }
 
-export const PointStatus: FunctionComponent<PointStatusProps> = ({ state }) => {
+export const PointStatus: FunctionComponent<PointStatusProps> = ({
+  queue,
+  processName,
+  onNextId,
+}) => {
   return (
     <Card className="point-status">
       <div className="status-column">
         <Icon
-          icon={state.currentId === undefined ? "ban-circle" : "endorsed"}
+          icon={queue[0] === undefined ? "ban-circle" : "endorsed"}
           size={30}
-          intent={
-            state.currentId === undefined ? Intent.DANGER : Intent.SUCCESS
-          }
+          intent={queue[0] === undefined ? Intent.DANGER : Intent.SUCCESS}
           className="work-status"
         />
-        {state.queueIds.length === 0 && (
+        {queue.length === 0 && (
           <Icon icon="circle" size={30} intent={Intent.DANGER} />
         )}
-        {state.queueIds
+        {queue
           .filter((s, index) => index < 3)
           .map((s, index) => (
             <Icon
               icon={index === 2 ? "array" : "user"}
               size={30}
               intent={Intent.SUCCESS}
-              key={state.toString() + "Queue" + index}
+              key={s + "_Queue_" + index}
             />
           ))}
       </div>
       <div className="text-column">
         <div className={Classes.TEXT_LARGE + " work-status work-status-margin"}>
-          {state.currentId === undefined ? "No Work" : "In Work"}
+          {queue[0] === undefined ? "No Work" : "In Work"}
         </div>
         <div className={Classes.TEXT_LARGE + " work-status work-status-margin"}>
           In Queue:
-          {"\n" + state.queueIds.length}
+          {"\n" + queue.length}
         </div>
-        <Timer state={state} />
+        <Timer
+          currentId={queue[0]}
+          processName={processName}
+          onTimeEnd={onNextId}
+        />
       </div>
     </Card>
   );

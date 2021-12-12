@@ -1,19 +1,18 @@
-import { PointProps } from "./pointProps";
+import { Subject } from "rxjs";
+import { StreamProps } from "./streamProps";
 
 export interface GlobalStateModel {
-  enter: PointProps[];
-  checkout: PointProps[];
-  orderList: PointProps[];
-  cookBurger: PointProps[];
-  cookFries: PointProps[];
-  cookDrinks: PointProps[];
-  packing: PointProps[];
-  delivery: PointProps[];
-  exit: PointProps[];
+  enter: Subject<StreamProps>;
+  checkout: Subject<StreamProps>;
+  orderList: Subject<StreamProps>;
+  cookBurger: Subject<StreamProps>;
+  cookFries: Subject<StreamProps>;
+  cookDrinks: Subject<StreamProps>;
+  packing: Subject<StreamProps>;
+  delivery: Subject<StreamProps>;
+  exit: Subject<StreamProps>;
 
-  packQueue: PackQueue;
-
-  nextCustomerId: number;
+  currentId: number;
   timeSettings: TimeSettings;
 }
 

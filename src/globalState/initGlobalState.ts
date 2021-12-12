@@ -1,29 +1,21 @@
 import { createGlobalState } from "react-hooks-global-state";
+import { Subject } from "rxjs";
 import { GlobalStateModel } from "../models/globalState";
+import { StreamProps } from "../models/streamProps";
 
 const initialState: GlobalStateModel = {
-  enter: [{ currentId: undefined, queueIds: [], timer: -1 }],
-  checkout: [
-    { currentId: undefined, queueIds: [], timer: -1 },
-    { currentId: undefined, queueIds: [], timer: -1 },
-  ],
-  orderList: [{ currentId: undefined, queueIds: [], timer: -1 }],
-  cookBurger: [{ currentId: undefined, queueIds: [], timer: -1 }],
-  cookFries: [{ currentId: undefined, queueIds: [], timer: -1 }],
-  cookDrinks: [{ currentId: undefined, queueIds: [], timer: -1 }],
-  packing: [{ currentId: undefined, queueIds: [], timer: -1 }],
-  delivery: [
-    { currentId: undefined, queueIds: [], timer: -1 },
-    { currentId: undefined, queueIds: [], timer: -1 },
-  ],
-  exit: [{ currentId: undefined, queueIds: [], timer: -1 }],
+  enter: new Subject<StreamProps>(),
+  checkout: new Subject<StreamProps>(),
+  orderList: new Subject<StreamProps>(),
+  cookBurger: new Subject<StreamProps>(),
+  cookFries: new Subject<StreamProps>(),
+  cookDrinks: new Subject<StreamProps>(),
+  packing: new Subject<StreamProps>(),
+  delivery: new Subject<StreamProps>(),
+  exit: new Subject<StreamProps>(),
 
-  packQueue: {
-    burgers: [],
-    fries: [],
-    drinks: [],
-  },
-  nextCustomerId: 0,
+  currentId: 0,
+
   timeSettings: {
     enter: 5,
     checkout: 10,

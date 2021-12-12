@@ -6,21 +6,21 @@ import "../node_modules/@blueprintjs/core/lib/css/blueprint.css";
 import { Point } from "./components/point";
 import { Button } from "@blueprintjs/core";
 import { addCustomer } from "./services/enterService";
-import { PackPoint } from "./components/packPoint";
+// import { PackPoint } from "./components/packPoint";
 
 function App() {
   return (
     <div>
       <Button onClick={addCustomer} />
       <Point name="Enter" process="enter" />
-      <Point name="Checkout" process="checkout" />
+      {/* <Point name="Checkout" process="checkout" />
       <Point name="Order list" process="orderList" />
       <Point name="Burgers" process="cookBurger" />
       <Point name="Fries" process="cookFries" />
-      <Point name="Drinks" process="cookDrinks" />
-      <PackPoint name="Packing" />
-      <Point name="Delivery" process="delivery" />
-      <Point name="Exit" process="exit" />
+      <Point name="Drinks" process="cookDrinks" /> */}
+      {/* <PackPoint name="Packing" /> */}
+      {/* <Point name="Delivery" process="delivery" />
+      <Point name="Exit" process="exit" /> */}
     </div>
   );
 }

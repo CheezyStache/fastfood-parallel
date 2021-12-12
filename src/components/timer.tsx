@@ -1,37 +1,48 @@
 import { Colors } from "@blueprintjs/core";
 import React, { FunctionComponent, useEffect, useState } from "react";
-import { PointProps } from "../models/pointProps";
+import { interval, take, tap } from "rxjs";
+import { useGlobalState } from "../globalState/initGlobalState";
+import { TimeSettings } from "../models/globalState";
 
 interface TimerProps {
-  state: PointProps;
+  currentId: string | undefined;
+  processName: keyof TimeSettings;
+  onTimeEnd: () => void;
 }
 
-export const Timer: FunctionComponent<TimerProps> = ({ state }) => {
+export const Timer: FunctionComponent<TimerProps> = ({
+  currentId,
+  processName: pointName,
+  onTimeEnd,
+}) => {
+  const [globalTimer] = useGlobalState("timeSettings");
+  const [timer, setTimer] = useState<number>(0);
   const [second, setSecond] = useState<number>(-1);
+  const [isEnabled, setIsEnabled] = useState<boolean>(false);
 
   useEffect(() => {
-    const interval = setInterval(
-      () =>
-        setSecond((oldSecond) => {
-          const newSecond = oldSecond - 1;
+    if (timer === globalTimer[pointName]) return;
 
-          if (newSecond <= -1) return -1;
-
-          return newSecond;
-        }),
-      1000
-    );
-
-    return () => clearInterval(interval);
-  }, []);
+    setTimer(globalTimer[pointName]);
+  }, [globalTimer]);
 
   useEffect(() => {
-    if (state.timer === -1 || state.currentId === undefined) return;
+    setIsEnabled(currentId !== undefined);
+    if (currentId === undefined) return;
 
-    setSecond(state.timer);
-  }, [state]);
+    setSecond(timer);
 
-  if (second === -1) return <></>;
+    const sub = interval(1000)
+      .pipe(
+        tap(() => setSecond((old) => old - 1)),
+        take(timer)
+      )
+      .subscribe({ complete: () => onTimeEnd() });
+
+    return () => sub.unsubscribe();
+  }, [currentId]);
+
+  if (!isEnabled) return <></>;
 
   return (
     <div className="timer">
@@ -46,7 +57,7 @@ export const Timer: FunctionComponent<TimerProps> = ({ state }) => {
           color={Colors.BLUE3}
           stroke={Colors.BLUE3}
           style={{
-            animation: `countdown ${state.timer}s linear infinite forwards`,
+            animation: `countdown ${timer}s linear infinite forwards`,
           }}
         ></circle>
       </svg>
