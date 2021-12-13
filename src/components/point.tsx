@@ -1,4 +1,3 @@
-import { Card, Classes } from "@blueprintjs/core";
 import React, {
   FunctionComponent,
   useCallback,
@@ -7,7 +6,8 @@ import React, {
 } from "react";
 import { getGlobalState, useGlobalState } from "../globalState/initGlobalState";
 import { GlobalStateModel } from "../models/globalState";
-import { PointStatus, WaitQueueItem } from "./pointStatus";
+import { StatusCard } from "./statusCard";
+import { WaitQueueItem } from "./waitStatus";
 
 type Process = keyof Omit<GlobalStateModel, "currentId" | "timeSettings">;
 
@@ -87,27 +87,21 @@ export const Point: FunctionComponent<PointComponentProps> = ({
 
   return (
     <>
-      <Card key={name + "_1"}>
-        <div className={Classes.TEXT_LARGE}>
-          {name + (isDouble ? " 1" : "")}
-        </div>
-        <PointStatus
-          queue={queue1}
-          processName={process}
-          onNextId={() => onNextId(0)}
-          waitQueue={waitCount !== undefined ? waitQueue1 : undefined}
-        />
-      </Card>
+      <StatusCard
+        name={name + (isDouble ? " 1" : "")}
+        queue={queue1}
+        processName={process}
+        onNextId={() => onNextId(0)}
+        waitQueue={waitCount !== undefined ? waitQueue1 : undefined}
+      />
       {isDouble && (
-        <Card key={name + "_2"}>
-          <div className={Classes.TEXT_LARGE}>{name + " 2"}</div>
-          <PointStatus
-            queue={queue2}
-            processName={process}
-            onNextId={() => onNextId(1)}
-            waitQueue={waitCount !== undefined ? waitQueue2 : undefined}
-          />
-        </Card>
+        <StatusCard
+          name={name + (isDouble ? " 2" : "")}
+          queue={queue2}
+          processName={process}
+          onNextId={() => onNextId(1)}
+          waitQueue={waitCount !== undefined ? waitQueue2 : undefined}
+        />
       )}
     </>
   );
