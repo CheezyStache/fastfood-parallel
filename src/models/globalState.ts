@@ -26,4 +26,8 @@ export interface TimeSettings {
   packing: number;
   delivery: number;
   exit: number;
+
+  entranceRange: number;
+  checkoutRange: number;
+  workRange: number;
 }

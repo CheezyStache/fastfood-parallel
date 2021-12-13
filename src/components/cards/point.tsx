@@ -4,8 +4,11 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { getGlobalState, useGlobalState } from "../globalState/initGlobalState";
-import { GlobalStateModel } from "../models/globalState";
+import {
+  getGlobalState,
+  useGlobalState,
+} from "../../globalState/initGlobalState";
+import { GlobalStateModel } from "../../models/globalState";
 import { StatusCard } from "./statusCard";
 import { WaitQueueItem } from "./waitStatus";
 

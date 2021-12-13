@@ -1,6 +1,6 @@
 import { Card, Classes } from "@blueprintjs/core";
 import React, { FunctionComponent } from "react";
-import { TimeSettings } from "../models/globalState";
+import { TimeSettings } from "../../models/globalState";
 import { QueueStatus } from "./queueStatus";
 import { Timer } from "./timer";
 import { WaitQueueItem, WaitStatus } from "./waitStatus";
@@ -9,7 +9,10 @@ import { WorkStatus } from "./workStatus";
 interface StatusCardProps {
   name: string;
   queue: string[];
-  processName: keyof TimeSettings;
+  processName: keyof Omit<
+    TimeSettings,
+    "entranceRange" | "checkoutRange" | "workRange"
+  >;
   onNextId: () => void;
   waitQueue?: WaitQueueItem[];
 }
