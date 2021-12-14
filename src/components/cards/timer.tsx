@@ -1,8 +1,8 @@
 import { Colors } from "@blueprintjs/core";
 import React, { FunctionComponent, useEffect, useState } from "react";
-import { interval, take, tap } from "rxjs";
 import { getGlobalState } from "../../globalState/initGlobalState";
 import { TimeSettings } from "../../models/globalState";
+import { CountdownCircleTimer } from "react-countdown-circle-timer";
 
 interface TimerProps {
   currentId: string | undefined;
@@ -19,48 +19,42 @@ export const Timer: FunctionComponent<TimerProps> = ({
   onTimeEnd,
 }) => {
   const [timer, setTimer] = useState<number>(0);
-  const [second, setSecond] = useState<number>(-1);
   const [isEnabled, setIsEnabled] = useState<boolean>(false);
+  const [key, setKey] = useState<string>(getRandomString());
 
   useEffect(() => {
-    setIsEnabled(currentId !== undefined);
-    if (currentId === undefined) return;
+    const check = currentId !== undefined;
+
+    if (!check) {
+      setIsEnabled(false);
+      return;
+    }
 
     const randomTimer = getRandomTime(processName);
-
     setTimer(randomTimer);
-    setSecond(randomTimer);
 
-    const sub = interval(1000)
-      .pipe(
-        tap(() => setSecond((old) => old - 1)),
-        take(randomTimer)
-      )
-      .subscribe({ complete: () => onTimeEnd() });
+    setTimeout(() => {
+      setKey(getRandomString());
+    }, 100);
 
-    return () => sub.unsubscribe();
+    setIsEnabled(true);
   }, [currentId]);
 
   if (!isEnabled) return <></>;
 
   return (
-    <div className="timer">
-      <div className="timer-number" style={{ color: Colors.BLUE3 }}>
-        {second}
-      </div>
-      <svg className="timer-svg">
-        <circle
-          r="18"
-          cx="20"
-          cy="20"
-          color={Colors.BLUE3}
-          stroke={Colors.BLUE3}
-          style={{
-            animation: `countdown ${timer}s linear infinite forwards`,
-          }}
-        ></circle>
-      </svg>
-    </div>
+    <CountdownCircleTimer
+      isPlaying
+      duration={timer}
+      colors={Colors.BLUE3}
+      size={40}
+      trailStrokeWidth={5}
+      strokeWidth={5}
+      onComplete={onTimeEnd}
+      key={key}
+    >
+      {({ remainingTime }) => remainingTime}
+    </CountdownCircleTimer>
   );
 };
 
@@ -96,4 +90,9 @@ function getRandomInt(min: number, max: number): number {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min)) + min;
+}
+
+function getRandomString(): string {
+  const randomString = require("crypto").randomBytes(64).toString("hex");
+  return randomString;
 }
