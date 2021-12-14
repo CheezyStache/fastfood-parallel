@@ -48,12 +48,27 @@ export const Point: FunctionComponent<PointComponentProps> = ({
 
   useEffect(() => {
     const sub = state.subscribe((prop) => {
-      if (
-        isDouble &&
-        ((waitCount === undefined && queue2.length < queue1.length) ||
-          (waitCount !== undefined && waitQueue2.length < waitQueue1.length) ||
-          waitQueue2.findIndex((w) => w.id === prop.id) !== -1)
-      ) {
+      if (waitQueue2.findIndex((w) => w.id === prop.id) !== -1) {
+        onSubscription(prop.id, setQueue2, setWaitQueue2, waitCount);
+        return;
+      }
+
+      if (waitQueue1.findIndex((w) => w.id === prop.id) !== -1) {
+        onSubscription(prop.id, setQueue1, setWaitQueue1, waitCount);
+        return;
+      }
+
+      if (!isDouble) {
+        onSubscription(prop.id, setQueue1, setWaitQueue1, waitCount);
+        return;
+      }
+
+      if (waitCount === undefined && queue2.length < queue1.length) {
+        onSubscription(prop.id, setQueue2, setWaitQueue2, waitCount);
+        return;
+      }
+
+      if (waitCount !== undefined && waitQueue2.length < waitQueue1.length) {
         onSubscription(prop.id, setQueue2, setWaitQueue2, waitCount);
         return;
       }
