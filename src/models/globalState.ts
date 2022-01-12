@@ -1,4 +1,5 @@
 import { Subject } from "rxjs";
+import { EventLog } from "../eventLog";
 import { StreamProps } from "./streamProps";
 
 export interface GlobalStateModel {
@@ -14,6 +15,7 @@ export interface GlobalStateModel {
 
   currentId: number;
   timeSettings: TimeSettings;
+  eventLog: EventLog;
 }
 
 export interface TimeSettings {

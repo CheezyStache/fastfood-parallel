@@ -4,6 +4,7 @@ import React, {
   useCallback,
   useEffect,
   useState,
+  useRef,
 } from "react";
 import { getGlobalState, useGlobalState } from "../globalState/initGlobalState";
 import { TimeSettings } from "../models/globalState";
@@ -16,6 +17,9 @@ export const Settings: FunctionComponent = () => {
     getGlobalState("timeSettings")
   );
   const [timeSettings, setTimeSettings] = useGlobalState("timeSettings");
+  const eventLog = getGlobalState("eventLog");
+
+  const [downloadUrl, setDownloadUrl] = useState<string>("");
 
   useEffect(() => {
     setLocalTimeSettings(timeSettings);
@@ -38,6 +42,25 @@ export const Settings: FunctionComponent = () => {
 
     enterSubject.next({ id: id.toString() });
   }, [currentId, setCurrentId, enterSubject]);
+
+  const downloadEl = useRef<HTMLAnchorElement>(null);
+  const downloadLogs = useCallback(() => {
+    const blob = new Blob([eventLog.export()]);
+    const url = URL.createObjectURL(blob);
+
+    setDownloadUrl(url);
+  }, [eventLog]);
+
+  useEffect(() => {
+    if (downloadUrl) {
+      if (downloadEl.current !== null) {
+        downloadEl.current.click();
+      }
+
+      URL.revokeObjectURL(downloadUrl);
+      setDownloadUrl("");
+    }
+  }, [downloadEl, downloadUrl]);
 
   return (
     <Card>
@@ -128,7 +151,15 @@ export const Settings: FunctionComponent = () => {
           />
         </div>
         <div className="button-column">
+          <a
+            style={{display: "none"}}
+            download="diner-service.log"
+            href={downloadUrl}
+            ref={downloadEl}
+            />
+
           <Button icon="add" text="Add customer" onClick={addCustomer} />
+          <Button icon="download" text="Download logs" onClick={downloadLogs} />
           <Button
             icon="confirm"
             text="Confirm settings"

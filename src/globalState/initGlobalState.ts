@@ -1,5 +1,6 @@
 import { createGlobalState } from "react-hooks-global-state";
 import { Subject } from "rxjs";
+import { EventLog } from "../eventLog";
 import { GlobalStateModel } from "../models/globalState";
 import { StreamProps } from "../models/streamProps";
 
@@ -31,6 +32,7 @@ const initialState: GlobalStateModel = {
     checkoutRange: 2,
     workRange: 2,
   },
+  eventLog: new EventLog(),
 };
 
 export const { useGlobalState, getGlobalState, setGlobalState } =

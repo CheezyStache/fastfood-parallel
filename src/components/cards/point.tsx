@@ -12,7 +12,7 @@ import { GlobalStateModel } from "../../models/globalState";
 import { StatusCard } from "./statusCard";
 import { WaitQueueItem } from "./waitStatus";
 
-type Process = keyof Omit<GlobalStateModel, "currentId" | "timeSettings">;
+type Process = keyof Omit<GlobalStateModel, "currentId" | "timeSettings" | "eventLog">;
 
 interface PointComponentProps {
   name: string;
@@ -30,6 +30,7 @@ export const Point: FunctionComponent<PointComponentProps> = ({
   isDouble,
 }) => {
   const [state] = useGlobalState(process);
+  const eventLog = getGlobalState("eventLog");
   const [queue1, setQueue1] = useState<string[]>([]);
   const [queue2, setQueue2] = useState<string[]>([]);
   const [waitQueue1, setWaitQueue1] = useState<WaitQueueItem[]>([]);
@@ -37,17 +38,21 @@ export const Point: FunctionComponent<PointComponentProps> = ({
 
   const sendToNextProcess = useCallback(
     (id: string) => {
+      eventLog.info(name, `dequeue order#${id}`);
+
       nextProcess.forEach((p) => {
         const next = getGlobalState(p);
         next.next({ id: id });
       });
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [name]
   );
 
   useEffect(() => {
     const sub = state.subscribe((prop) => {
+      eventLog.info(name, `enqueue order#${prop.id}`);
+
       if (waitQueue2.findIndex((w) => w.id === prop.id) !== -1) {
         onSubscription(prop.id, setQueue2, setWaitQueue2, waitCount);
         return;
@@ -78,7 +83,7 @@ export const Point: FunctionComponent<PointComponentProps> = ({
 
     return () => sub.unsubscribe();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [queue1, queue2, waitQueue1, waitQueue2]);
+  }, [queue1, queue2, waitQueue1, waitQueue2, name]);
 
   useEffect(() => {
     onWaitQueueChange(waitQueue1, setWaitQueue1, setQueue1, waitCount);
